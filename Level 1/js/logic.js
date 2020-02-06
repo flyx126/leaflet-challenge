@@ -10,9 +10,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 let myurl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
 
 d3.json(myurl, d => {
-    // console.log(d)
+    console.log(d)
     d.features.forEach(m => {
-        // console.log(m.geometry.coordinates[1])
+        // console.log(m)
         let color1 = ""
         if (m.properties.mag < 1) {
             color1 = "yellow"
@@ -33,22 +33,25 @@ d3.json(myurl, d => {
             fillColor: color1,
             fillOpacity: 0.75,
             radius: (m.properties.mag) * 1000
-        }).addTo(mymap)
+        }).bindPopup(`<h3>Earthquake magnitude. ${m.properties.mag}</h3><hr><h3>Place: ${m.properties.place}`).addTo(mymap)
     })
 
-    var legend = L.control({ position: "bottomleft" });
+    var legend = L.control({ position: "bottomright" });
 
     legend.onAdd = function(map) {
         var div = L.DomUtil.create("div", "legend");
         div.innerHTML += "<h4>Earthquake Magnitude</h4>";
-        div.innerHTML += '<i style="background: #477AC2"></i><span>0-1</span><br>';
-        div.innerHTML += '<i style="background: #448D40"></i><span>2-3</span><br>';
-        div.innerHTML += '<i style="background: #E6E696"></i><span>4-5</span><br>';
-        div.innerHTML += '<i style="background: #E8E6E0"></i><span>}6</span><br>';
+        div.innerHTML += '<i style="background: yellow"></i><span>0-1</span><br>';
+        div.innerHTML += '<i style="background: blue"></i><span>1-2</span><br>';
+        div.innerHTML += '<i style="background: green"></i><span>2-3</span><br>';
+        div.innerHTML += '<i style="background: red"></i><span>3-4</span><br>';
+        div.innerHTML += '<i style="background: purple"></i><span>4-5</span><br>';
+        div.innerHTML += '<i style="background: black"></i><span>+6</span><br>';
+
 
         return div;
     };
 
-    legend.addTo(map);
+    legend.addTo(mymap);
 
 });
